@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kmer_ml &mdash; source_prediction 2024 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+      <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=6fefd858"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/toggleprompt.js?v=5801b3bb"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="utils" href="utils.html" />
+    <link rel="prev" title="1. Exploratory Data Analysis" href="eda.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            source_prediction
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="eda.html">1. Exploratory Data Analysis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">kmer_ml</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">source_prediction</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">&lt;no title&gt;</a></li>
+      <li class="breadcrumb-item active">kmer_ml</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto_examples/kmer_ml.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-examples-kmer-ml-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="kmer-ml">
+<span id="sphx-glr-auto-examples-kmer-ml-py"></span><h1>kmer_ml<a class="headerlink" href="#kmer-ml" title="Link to this heading"></a></h1>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># coding: utf-8</span>
+
+<span class="c1"># Author: Ge Zhou</span>
+<span class="c1"># Email: ge.zhou@kaust.edu.sa</span>
+
+
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xgboost</span> <span class="k">as</span> <span class="nn">xgb</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="c1">#import matplotlib.pyplot as plt</span>
+<span class="kn">import</span> <span class="nn">shap</span>
+<span class="c1">#import importlib</span>
+<span class="c1">#importlib.reload(shap)</span>
+<span class="c1">#shap.initjs()</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span><span class="p">,</span> <span class="n">KFold</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">GridSearchCV</span><span class="p">,</span> <span class="n">cross_validate</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">classification_report</span><span class="p">,</span> <span class="n">balanced_accuracy_score</span><span class="p">,</span> <span class="n">roc_auc_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">StratifiedKFold</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">testflag</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># K-mer dataset processing</span>
+
+<span class="c1">## Starting with reading chunk files(2000 in total)</span>
+
+
+<span class="c1"># Function to retrieve all file names in a specified directory</span>
+<span class="c1"># that start with the string &#39;chunk&#39; followed by a numerical value.</span>
+<span class="k">def</span> <span class="nf">file_name_listdir_local</span><span class="p">(</span><span class="n">file_dir</span><span class="p">):</span>
+    <span class="n">files_local</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Initialize an empty list to hold the file names.</span>
+    <span class="k">for</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">file_dir</span><span class="p">):</span>  <span class="c1"># Loop through all files in the specified directory.</span>
+    <span class="c1">#    print(files)  # (Optional) print the name of each file (line commented out).</span>
+        <span class="c1"># Check if the file name starts with &#39;chunk&#39; and the rest of the name is a numerical value.</span>
+        <span class="k">if</span> <span class="n">files</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;chunk&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">files</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">files_local</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>  <span class="c1"># If condition met, add the file name to the list.</span>
+    <span class="k">return</span> <span class="n">files_local</span>  <span class="c1"># Return the list of file names meeting the specified criteria.</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1">## Generating a Sparse Matrix and Establishing Cut-off Values (0.01, 0.05, 0.1...) for Filtering</span>
+
+<span class="c1"># Define a function named &#39;get_datamatrix&#39; with parameters &#39;row_list&#39;, &#39;files_select&#39;, &#39;datapath&#39;, and &#39;cutoff&#39;</span>
+<span class="k">def</span> <span class="nf">get_datamatrix</span><span class="p">(</span><span class="n">row_list</span><span class="p">,</span><span class="n">numb_files_select</span><span class="p">,</span><span class="n">datapath</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span><span class="n">cutoff</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+    <span class="c1"># Call file_name_listdir_local function to obtain a list of files from the specified directory</span>
+    <span class="n">files_local</span> <span class="o">=</span> <span class="n">file_name_listdir_local</span><span class="p">(</span><span class="n">datapath</span><span class="p">)</span>
+
+    <span class="c1"># Restrict the list of files to the first &#39;files_select&#39; number of files</span>
+
+    <span class="k">if</span> <span class="n">numb_files_select</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">numb_files_select</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">files_local</span><span class="p">):</span>
+        <span class="n">files_local</span> <span class="o">=</span> <span class="n">files_local</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">numb_files_select</span><span class="p">]</span>
+
+    <span class="c1"># Initialize an empty dictionary to store the column vocabulary</span>
+    <span class="n">vocabulary_col</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Initialize an empty dictionary to store the row vocabulary</span>
+    <span class="n">vocabulary_row</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Populate the row vocabulary with the values from &#39;row_list&#39;</span>
+    <span class="k">for</span> <span class="n">rl</span> <span class="ow">in</span> <span class="n">row_list</span><span class="p">:</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">vocabulary_row</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">rl</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">vocabulary_row</span><span class="p">))</span>
+
+    <span class="c1"># Initialize counters and empty lists for further processing</span>
+    <span class="n">num_removed</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">num_preserved</span>  <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">row</span> <span class="o">=</span><span class="p">[]</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">num_list</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># This list is initialized but not used within the function</span>
+
+    <span class="c1"># Iterate through each file in the restricted list of files</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">files_local</span><span class="p">:</span>
+        <span class="c1"># Open and read the file in binary mode</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">datapath</span> <span class="o">+</span> <span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">ob</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+            <span class="c1"># Iterate through each line in the file</span>
+            <span class="k">for</span> <span class="n">lines</span> <span class="ow">in</span> <span class="n">ob</span><span class="p">:</span>
+                <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">linestr</span> <span class="o">=</span> <span class="n">lines</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>  <span class="c1"># Decode the binary line to utf-8 and split it into words</span>
+
+                <span class="c1"># Count the occurrences of words starting with &#39;assembly&#39; and ending with a digit</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">linestr</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;assembly&#39;</span><span class="p">):</span>
+                        <span class="n">n</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+                <span class="c1"># Check if the ratio of the count to 857.0 is greater than the cutoff value</span>
+                <span class="k">if</span> <span class="n">n</span><span class="o">/</span><span class="mf">857.0</span> <span class="o">&gt;</span> <span class="n">cutoff</span><span class="p">:</span>
+                    <span class="n">num_preserved</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># Increment the count of preserved lines</span>
+                    <span class="n">indx_col</span> <span class="o">=</span> <span class="n">vocabulary_col</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">linestr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">vocabulary_col</span><span class="p">))</span>  <span class="c1"># Update the column vocabulary</span>
+
+                    <span class="c1"># Process each word in the line</span>
+                    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">linestr</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;assembly&#39;</span><span class="p">):</span>
+                            <span class="n">sp</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">sp</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">9</span><span class="p">:]</span> <span class="ow">in</span> <span class="n">vocabulary_row</span><span class="p">:</span>
+                                <span class="n">col</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">indx_col</span><span class="p">)</span>  <span class="c1"># Append the column index</span>
+                                <span class="n">indx_row</span> <span class="o">=</span> <span class="n">vocabulary_row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sp</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">9</span><span class="p">:])</span>  <span class="c1"># Get the row index from the vocabulary</span>
+                                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">indx_row</span><span class="p">)</span>  <span class="c1"># Append the row index</span>
+                                <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sp</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>  <span class="c1"># Append the data value</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">num_removed</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># Increment the count of removed lines</span>
+
+    <span class="c1"># Calculate the percentage of removed lines</span>
+    <span class="n">remove_percent</span> <span class="o">=</span> <span class="n">num_removed</span><span class="o">/</span><span class="p">(</span><span class="n">num_preserved</span> <span class="o">+</span> <span class="n">num_removed</span><span class="p">)</span>
+
+    <span class="c1"># Create a Compressed Sparse Row matrix from the data, row, and col lists</span>
+    <span class="n">mtr</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)))</span>
+
+    <span class="c1"># Return the sparse matrix, column vocabulary, row vocabulary, and removal percentage as output</span>
+    <span class="k">return</span> <span class="n">mtr</span><span class="p">,</span> <span class="n">vocabulary_col</span><span class="p">,</span> <span class="n">vocabulary_row</span><span class="p">,</span> <span class="n">remove_percent</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1">## Get and Filter Data: Acquire the specified labels from the dataset and filter out the two designated data types.</span>
+<span class="c1">## HH&amp;HA HH&amp;AA AND HA&amp;AA</span>
+
+
+<span class="k">def</span> <span class="nf">get_datafilter</span><span class="p">(</span><span class="n">datalabel</span><span class="p">,</span> <span class="n">filefold</span><span class="p">):</span>
+    <span class="c1"># Reading data from a CSV file and storing it in a DataFrame called df</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">filefold</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">):</span>
+        <span class="n">filefold</span> <span class="o">=</span> <span class="n">filefold</span> <span class="o">+</span><span class="s1">&#39;/&#39;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filefold</span><span class="o">+</span><span class="s1">&#39;shortened_traits_scoary.csv&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Extracting values from the input dictionary datalabel and storing them in variables HA, HH, and AA</span>
+    <span class="n">HA</span> <span class="o">=</span> <span class="n">datalabel</span><span class="p">[</span><span class="s1">&#39;HA&#39;</span><span class="p">]</span>
+    <span class="n">HH</span> <span class="o">=</span> <span class="n">datalabel</span><span class="p">[</span><span class="s1">&#39;HH&#39;</span><span class="p">]</span>
+    <span class="n">AA</span> <span class="o">=</span> <span class="n">datalabel</span><span class="p">[</span><span class="s1">&#39;AA&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Creating a new column called &quot;data_type&quot; in df.</span>
+    <span class="c1"># This column is populated based on the values in the &quot;mixed_other&quot;, &quot;human_other&quot;, and &quot;animal_other&quot; columns of df.</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;data_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">HA</span> <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;mixed_other&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+                               <span class="k">else</span> <span class="p">(</span><span class="n">HH</span> <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;human_other&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+                                     <span class="k">else</span> <span class="p">(</span><span class="n">AA</span> <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;animal_other&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Filtering df to include only the rows where &quot;data_type&quot; is 0 or 1.</span>
+    <span class="c1"># Storing the result in a new DataFrame called filtered1_df.</span>
+    <span class="n">filtered1_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;data_type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])]</span>
+    <span class="n">filtered1_df</span><span class="o">=</span> <span class="n">filtered1_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Name&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Returning the filtered DataFrame.</span>
+    <span class="k">return</span> <span class="n">filtered1_df</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">gridresearch_kfold</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">feature_names</span><span class="p">):</span>
+    <span class="c1"># Initialize empty lists to store the performance, method, report, roc_auc,</span>
+    <span class="c1"># best features, best feature indices, and best parameters</span>
+    <span class="n">performance</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">roc_auc</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">bestfeature</span> <span class="o">=</span><span class="p">[]</span>
+    <span class="n">bestfeature_indices</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">bestpara</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Run the process 5 times with different train-test splits</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Train-Test Split </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Split the dataset into training and testing sets</span>
+        <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+        <span class="c1"># Create a KFold object to split the training set into 5 folds</span>
+        <span class="n">kfold</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Loop through each fold</span>
+        <span class="k">for</span> <span class="n">fold</span><span class="p">,</span> <span class="p">(</span><span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">kfold</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># Split the training set into training and validation folds</span>
+            <span class="n">X_train_fold</span><span class="p">,</span> <span class="n">X_val_fold</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+            <span class="n">y_train_fold</span><span class="p">,</span> <span class="n">y_val_fold</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">y_train</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+
+            <span class="c1"># Define the parameters and the model for grid search</span>
+            <span class="n">xgb_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span><span class="s1">&#39;subsample&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]}</span>
+            <span class="n">xgb_model</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">XGBClassifier</span><span class="p">(</span><span class="n">objective</span><span class="o">=</span><span class="s1">&#39;binary:logistic&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Initialize GridSearchCV</span>
+            <span class="n">gs_clf</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">xgb_model</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">xgb_params</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;balanced_accuracy&#39;</span><span class="p">)</span>
+            <span class="c1"># Fit the model on the training fold</span>
+            <span class="n">gs_clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_fold</span><span class="p">,</span> <span class="n">y_train_fold</span><span class="p">)</span>
+
+            <span class="c1"># Predict on the validation and test sets</span>
+            <span class="n">y_pred</span> <span class="o">=</span> <span class="n">gs_clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_val_fold</span><span class="p">)</span>
+            <span class="n">pred_class_xgboost</span> <span class="o">=</span> <span class="n">gs_clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+            <span class="n">pred_probs_xgboost</span> <span class="o">=</span> <span class="n">gs_clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+            <span class="c1"># Get the best estimator and parameters from the grid search</span>
+            <span class="n">best_estimator</span> <span class="o">=</span> <span class="n">gs_clf</span><span class="o">.</span><span class="n">best_estimator_</span>
+            <span class="n">best_para</span> <span class="o">=</span> <span class="n">gs_clf</span><span class="o">.</span><span class="n">best_params_</span>
+            <span class="n">bestpara</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best_para</span><span class="p">)</span>
+
+            <span class="c1"># Get the feature importances from the best estimator</span>
+            <span class="n">best_features</span> <span class="o">=</span> <span class="n">gs_clf</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">feature_importances_</span>
+
+            <span class="c1"># Get the indices of the best features sorted in descending order</span>
+            <span class="n">best_feature_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">best_features</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># Get the names of the best features</span>
+            <span class="n">best_feature_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">feature_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">best_feature_indices</span><span class="p">]</span>
+            <span class="n">bestfeature</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best_feature_names</span><span class="p">)</span>
+            <span class="n">bestfeature_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best_feature_indices</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;best_featrure&#39;</span><span class="p">,</span> <span class="n">best_feature_names</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+            <span class="c1"># Get the classification report for the validation fold</span>
+            <span class="n">report0</span> <span class="o">=</span> <span class="n">classification_report</span><span class="p">(</span><span class="n">y_val_fold</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">output_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="c1"># Get the balanced accuracy score for the validation fold</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="n">balanced_accuracy_score</span><span class="p">(</span><span class="n">y_val_fold</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+            <span class="n">performance</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+
+            <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">report0</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best hyperparameters for this train-test split:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">gs_clf</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Confusion matrix for this fold:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_val_fold</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+
+    <span class="c1"># If running on a Linux platform, save the results to a file</span>
+
+    <span class="n">dataset</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;performance&#39;</span><span class="p">:</span><span class="n">performance</span><span class="p">,</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span><span class="n">method</span><span class="p">,</span>
+        <span class="s1">&#39;report&#39;</span><span class="p">:</span><span class="n">report</span><span class="p">,</span>
+        <span class="s1">&#39;roc_auc&#39;</span><span class="p">:</span><span class="n">roc_auc</span><span class="p">,</span>
+        <span class="s1">&#39;bestfeature&#39;</span><span class="p">:</span><span class="n">bestfeature</span><span class="p">,</span>
+        <span class="s1">&#39;bestfeature_indices&#39;</span><span class="p">:</span><span class="n">bestfeature_indices</span><span class="p">,</span>
+        <span class="s1">&#39;bestpara&#39;</span><span class="p">:</span><span class="n">bestpara</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">dataset</span>
+    <span class="c1"># current_datetime = datetime.now()</span>
+    <span class="c1"># datetime_string = current_datetime.strftime(&#39;%Y%m%d_%H%M&#39;)</span>
+    <span class="c1">#</span>
+    <span class="c1"># filename = f&quot;gridreasearch_{datetime_string}.pickle&quot;</span>
+    <span class="c1"># with open(filename,&#39;wb&#39;) as f:</span>
+    <span class="c1">#     pickle.dump(dataset, f)</span>
+    <span class="c1">#</span>
+    <span class="c1"># # Return all the stored results</span>
+    <span class="c1"># return  performance, method, report, roc_auc, bestfeature,bestfeature_indices,bestpara</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># shap value</span>
+<span class="k">def</span> <span class="nf">get_shapvalue</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sub_bestfeature_indices</span><span class="p">,</span><span class="n">sub_bestfeature_name</span><span class="p">,</span> <span class="n">best_para</span><span class="p">,</span><span class="n">class_name</span><span class="p">):</span>
+    <span class="n">X_subset</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span><span class="n">sub_bestfeature_indices</span><span class="p">]</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_subset</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+    <span class="c1"># Create and train your best XGBoost model</span>
+    <span class="n">best_model</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">XGBClassifier</span><span class="p">(</span> <span class="n">objective</span><span class="o">=</span><span class="s1">&#39;binary:logistic&#39;</span><span class="p">,</span>
+                                      <span class="n">param_grid</span> <span class="o">=</span> <span class="n">best_para</span> <span class="p">)</span>
+
+    <span class="c1">#gs_clf = GridSearchCV(estimator=estimator, param_grid=parameters, cv=3, n_jobs=-1, scoring=&#39;balanced_accuracy&#39;)</span>
+    <span class="n">best_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+    <span class="n">tmp</span> <span class="o">=</span>  <span class="p">[]</span>
+    <span class="n">datalabel</span> <span class="o">=</span> <span class="n">class_name</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">datalabel</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">datalabel</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">&lt;=</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">tmp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)):</span>
+        <span class="n">key</span><span class="p">[</span><span class="n">datalabel</span><span class="p">[</span><span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">exp_set</span> <span class="o">=</span> <span class="n">X_subset</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1">## K sample</span>
+    <span class="n">ksmp</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">background_summary</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">exp_set</span><span class="p">,</span> <span class="n">ksmp</span><span class="p">)</span>
+
+    <span class="n">explainer</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">KernelExplainer</span><span class="p">(</span><span class="n">best_model</span><span class="o">.</span><span class="n">predict</span><span class="p">,</span> <span class="n">background_summary</span><span class="p">)</span>
+
+    <span class="n">shap_values</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">exp_set</span><span class="p">)</span>
+
+    <span class="c1"># data save</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;shap_values&#39;</span><span class="p">:</span><span class="n">shap_values</span><span class="p">,</span>
+        <span class="s1">&#39;exp_set&#39;</span><span class="p">:</span><span class="n">exp_set</span><span class="p">,</span>
+        <span class="s1">&#39;sub_bestfeature_name&#39;</span><span class="p">:</span><span class="n">sub_bestfeature_name</span><span class="p">,</span>
+        <span class="s1">&#39;sub_bestfeature_indices&#39;</span><span class="p">:</span><span class="n">sub_bestfeature_indices</span><span class="p">,</span>
+        <span class="s1">&#39;key&#39;</span><span class="p">:</span><span class="n">key</span>
+    <span class="p">}</span>
+    <span class="c1">#</span>
+    <span class="c1"># current_datetime = datetime.now()</span>
+    <span class="c1"># datetime_string = current_datetime.strftime(&#39;%Y%m%d_%H%M&#39;)</span>
+    <span class="c1">#</span>
+    <span class="c1"># filename = f&quot;shapeKsmp{ksmp}_{datetime_string}.pickle&quot;</span>
+    <span class="c1"># with open(filename,&#39;wb&#39;) as f:</span>
+    <span class="c1">#     pickle.dump(dataset, f)</span>
+
+    <span class="k">return</span> <span class="n">dataset</span>
+</pre></div>
+</div>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-kmer-ml-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/62adb2ff2d518a08cffb21a4b33dd4df/kmer_ml.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">kmer_ml.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/0c8c564af297037c899e7b627f75ee06/kmer_ml.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">kmer_ml.py</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eda.html" class="btn btn-neutral float-left" title="1. Exploratory Data Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="utils.html" class="btn btn-neutral float-right" title="utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Sara Iftikhar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

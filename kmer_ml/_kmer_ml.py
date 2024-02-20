@@ -253,21 +253,13 @@ def gridresearch_kfold(X,y,feature_names):
     # return  performance, method, report, roc_auc, bestfeature,bestfeature_indices,bestpara
 
 
-
-
 # shap value 
 def get_shapvalue(X, y, sub_bestfeature_indices,sub_bestfeature_name, best_para,class_name):
     X_subset = X[:,sub_bestfeature_indices]
     X_train, X_test, y_train, y_test = train_test_split(X_subset, y, test_size=0.2)
 
     # Create and train your best XGBoost model
-    best_model = xgb.XGBClassifier( objective='binary:logistic', 
-                                  param_grid = best_para )
-
-    #gs_clf = GridSearchCV(estimator=estimator, param_grid=parameters, cv=3, n_jobs=-1, scoring='balanced_accuracy')
-    best_model.fit(X_train, y_train)
-
-    best_model = xgb.XGBClassifier( objective='binary:logistic', 
+    best_model = xgb.XGBClassifier( objective='binary:logistic',
                                       param_grid = best_para )
 
     #gs_clf = GridSearchCV(estimator=estimator, param_grid=parameters, cv=3, n_jobs=-1, scoring='balanced_accuracy')
@@ -284,7 +276,7 @@ def get_shapvalue(X, y, sub_bestfeature_indices,sub_bestfeature_name, best_para,
     exp_set = X_subset.copy()
     
     ## K sample
-    ksmp =100
+    ksmp = 100
     background_summary = shap.sample(exp_set, ksmp)
 
     explainer = shap.KernelExplainer(best_model.predict, background_summary)
