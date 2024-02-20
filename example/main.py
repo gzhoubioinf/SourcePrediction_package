@@ -60,7 +60,7 @@ def main(cutoff,numb_files_select,class_label,chunkdata_path,traits_scoary_path)
 if __name__ == '__main__':
 
     try:
-        with open(sys.argv[1], 'r') as f:
+        with open(os.path.join(os.getcwd(), 'input.json'), 'r') as f:
             data = json.load(f)
         cutoff = data['cutoff']
         numb_files_select = data['numb_files_select']
@@ -69,5 +69,6 @@ if __name__ == '__main__':
         chunkdata_path = data['chunkdata_path']
     except OSError:
         raise  OSError("Pls input the parameters json file.")
+
     main(cutoff,numb_files_select,class_label,chunkdata_path,traits_scoary_path)
 
