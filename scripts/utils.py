@@ -36,11 +36,14 @@ def get_data(return_bf_only:bool=True):
                                                             numb_files_select=numb_files_select,
                                                             datapath=filepath,
                                                             cutoff=cutoff)
-    # X = mtr
+
     y = filtered_df['data_type']
 
     if return_bf_only:
         print(f'shape of input: {X.shape}')
-        return X[:, best_feature_indices], y
+        try:
+            return X[:, best_feature_indices], y
+        except IndexError:
+            raise IndexError(f"shape of input: {X.shape}")
 
     return X, y
