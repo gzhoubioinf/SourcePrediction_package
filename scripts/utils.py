@@ -14,7 +14,7 @@ import kmer_ml
 # %%
 
 # data preprocessing
-def get_data(return_bf_only:bool=False):
+def get_data(return_bf_only:bool=True):
 
     best_feature_indices = [20178, 20177, 20176, 20175, 20174, 20173, 20172, 20171, 20170,
        20169]

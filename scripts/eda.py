@@ -48,7 +48,7 @@ X_array = X.toarray()
 
 # %%
 
-plotting heatmap
+# plotting heatmap
 
 whole_data = np.concatenate((X_array, y.values.reshape(-1, 1)), axis=1)
 _ = associations(
@@ -80,4 +80,4 @@ plt.show()
 
 # pie chart of target
 
-pie(y, ax_kws=dict(title='Target'))git add
+pie(y, ax_kws=dict(title='Target'))
