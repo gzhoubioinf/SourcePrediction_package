@@ -19,7 +19,8 @@ def get_data(return_bf_only:bool=True):
     best_feature_indices = [20178, 20177, 20176, 20175, 20174, 20173, 20172, 20171, 20170,
        20169]
 
-    with open(os.path.join(os.path.dirname(os.getcwd()), 'example', 'input.json'), 'r') as f:
+    with open('input.json', 'r') as f:
+    #with open(os.path.join(os.path.dirname(os.getcwd()), 'scripts', 'input.json'), 'r') as f:
         data = json.load(f)
 
     cutoff = data['cutoff']
