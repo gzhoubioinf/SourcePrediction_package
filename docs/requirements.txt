@@ -4,16 +4,13 @@ SeqMetrics
 pandas
 scikit-optimize
 scikit-learn
-tensorflow==1.15
-numpy==1.19.5
-h5py==2.10
+numpy
 ipython
 notebook
-protobuf==3.19.1
 openpyxl
 xgboost
 dython
-shap==0.41
+shap
 
 sphinx<7
 sphinx_copybutton
