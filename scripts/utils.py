@@ -44,6 +44,8 @@ def get_data(return_bf_only:bool=True):
         try:
             return X[:, best_feature_indices], y
         except IndexError:
-            raise IndexError(f"shape of input: {X.shape}")
+            raise IndexError(f"shape of input: {X.shape}, "
+                             f"number of selected files: {numb_files_select}, "
+                             f"{cutoff}, {chunkdata_path}, {removed_percent}")
 
     return X, y
