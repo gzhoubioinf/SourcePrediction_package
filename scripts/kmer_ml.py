@@ -53,7 +53,7 @@ def file_name_listdir_local(file_dir):
         # Check if the file name starts with 'chunk' and the rest of the name is a numerical value.
         if files.startswith('chunk') and files[6:].isdigit():  
             files_local.append(files)  # If condition met, add the file name to the list.
-    return files_local  # Return the list of file names meeting the specified criteria.
+    return np.sort(files_local)  # Return the list of file names meeting the specified criteria.
 
 
 # %%

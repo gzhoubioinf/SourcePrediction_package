@@ -7,6 +7,9 @@
 
 # importing necessary modules
 
+import io
+import os
+
 import numpy as np
 
 import matplotlib.pyplot as plt
@@ -20,14 +23,9 @@ from utils import get_data
 
 # %%
 
-# filename = f'dataset/chunk_0004'
-#
-# with open(filename, 'rb', buffering=30) as file:
-#     fio = io.FileIO(file.fileno())
-#     fbuf = io.BufferedReader(fio)
-#     print(fbuf.read(500))
 
-# reading data
+
+# # reading data
 X, y = get_data()
 
 feature_names = ['TTTTTTGCTAGCGGAAAACGGAGATTTAAAAGAAAACAAAATATTTTTTGCGTA',
@@ -46,11 +44,11 @@ feature_names = ['TTTTTTGCTAGCGGAAAACGGAGATTTAAAAGAAAACAAAATATTTTTTGCGTA',
 # converting sparse matrix to a numpy array
 X_array = X.toarray()
 
-X_array.shape()
+X_array.shape
 
 # %%
 
-y.shape()
+y.shape
 
 # %%
 
