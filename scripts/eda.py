@@ -46,6 +46,12 @@ feature_names = ['TTTTTTGCTAGCGGAAAACGGAGATTTAAAAGAAAACAAAATATTTTTTGCGTA',
 # converting sparse matrix to a numpy array
 X_array = X.toarray()
 
+X_array.shape()
+
+# %%
+
+y.shape()
+
 # %%
 
 # plotting heatmap

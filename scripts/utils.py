@@ -41,7 +41,6 @@ def get_data(return_bf_only:bool=True):
     y = filtered_df['data_type']
 
     if return_bf_only:
-        print(f'shape of input: {X.shape}')
         try:
             return X[:, best_feature_indices], y
         except IndexError:
