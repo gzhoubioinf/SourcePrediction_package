@@ -1,4 +1,4 @@
-ai4water
+git+https://github.com/AtrCheema/AI4Water.git@dev
 easy_mpl
 SeqMetrics
 pandas
