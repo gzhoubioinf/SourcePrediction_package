@@ -7,9 +7,6 @@
 
 # importing necessary modules
 
-import io
-import os
-
 import numpy as np
 
 import matplotlib.pyplot as plt
@@ -17,7 +14,7 @@ import matplotlib.pyplot as plt
 from dython.nominal import associations
 
 from easy_mpl.utils import create_subplots
-from easy_mpl import pie
+from easy_mpl import hist
 
 from utils import get_data
 
@@ -25,7 +22,8 @@ from utils import get_data
 
 
 
-# # reading data
+# reading data
+
 X, y = get_data()
 
 feature_names = ['TTTTTTGCTAGCGGAAAACGGAGATTTAAAAGAAAACAAAATATTTTTTGCGTA',
@@ -68,20 +66,20 @@ plt.show()
 
 # %%
 
-# plotting input features
+# plotting input features distribution
 
 fig, axes = create_subplots(10, figsize=(14,10))
 
 for col, ax in zip(range(X.shape[1]), axes.flatten()):
 
-    pie(X_array[:, col], ax=ax,
-        ax_kws=dict(title=f'input feature {col+1}'), show=False)
+    hist(X_array[:, col], ax=ax, ax_kws=dict(title=f'input feature {col + 1}'),
+         show=False)
 
 plt.tight_layout()
 plt.show()
 
 # %%
 
-# pie chart of target
+# target feature dstribution
 
-pie(y, ax_kws=dict(title='Target'))
+hist(y.values, ax_kws=dict(title='Target'))

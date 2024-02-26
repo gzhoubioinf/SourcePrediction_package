@@ -49,7 +49,7 @@ def get_data(return_bf_only:bool=True):
                              f"number of selected files: {numb_files_select}, "
                              f"{cutoff}, {chunkdata_path}, {removed_percent}")
 
-    return X, y
+    return X, y, voc_col.keys()
 
 
 def plot_confidence_interval(datalabel, report):
