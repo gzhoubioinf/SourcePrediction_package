@@ -1,6 +1,6 @@
 """
 ==========================
-2. Prediction Performance
+3. Prediction Performance
 ==========================
 """
 
@@ -137,7 +137,7 @@ ax_ = im.axes
 ax_.set_title(target)
 plt.show()
 
-# # %%
+# %%
 #
 # flag = ['precision', 'recall', 'f1-score']
 # # Define the correspondence between cut-offs and suffix numbers

@@ -1,6 +1,6 @@
 """
 ================================
-4. Hyper-parameter Optimization
+2. Hyper-parameter Optimization
 ================================
 """
 
