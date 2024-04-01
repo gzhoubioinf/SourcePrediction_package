@@ -9,6 +9,6 @@
     "HH": 1,
     "AA": 2 },
   "//fourth_comment": "number of chunkdata files that are selected. -1 to select all files",
-  "numb_files_select": 5,
+  "numb_files_select": 1,
   "cutoff": 0.01
 }

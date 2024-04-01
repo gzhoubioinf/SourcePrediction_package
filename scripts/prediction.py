@@ -52,10 +52,10 @@ TrainX, TestX, TrainY, TestY = TrainTestSplit(seed=313).split_by_random(X, y)
 model_name = 'XGBClassifier'
 
 model = Model(
-    model={'XGBClassifier': {'n_estimators': 33,
-                              'boosting_type': 'goss',
-                              'num_leaves': 479,
-                              'learning_rate': 0.07285550882062408}},
+    model={'XGBClassifier': {'n_estimators': 100,
+                              'boosting_type': 'dart',
+                              'num_leaves': 174,
+                              'learning_rate': 0.07343729923442806}},
     input_features=list(inputs),
     output_features=target,
     verbosity=0,
@@ -73,69 +73,69 @@ print(f'F1 score: {f1_score_macro(TestY.values, test_p)}')
 
 
 # %%
-
-roc_func = RocCurveDisplay.from_estimator
-pr_func = PrecisionRecallDisplay.from_estimator
-
-fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2,
-                               figsize=(9,9))
-
-tr_kws = {'estimator': model,
-           'X': TrainX,
-           'y': TrainY.values,
-           'ax': ax1,
-           'name': target
-           }
-
-roc_func(**tr_kws)
-ax1.grid(ls='--', color='lightgrey')
-ax1.set_title("Training")
-
-test_kws = {'estimator': model,
-       'X': TestX,
-       'y': TestY.values,
-       'ax': ax2,
-       'name': target
-       }
-
-roc_func(**test_kws)
-
-ax2.grid(ls='--', color='lightgrey')
-ax2.set_title("Test")
-ax2.set_ylabel('')
-
-tr_kws['ax'] = ax3
-pr_func(**tr_kws)
-ax3.grid(ls='--', color='lightgrey')
-
-test_kws['ax'] = ax4
-pr_func(**test_kws)
-ax4.set_ylabel('')
-ax4.grid(ls='--', color='lightgrey')
-
-plt.show()
-
-# %%
-
-# confusion matrix
-
-X = np.concatenate([TrainX, TestX])
-y = np.concatenate([TrainY, TestY])
-
-pred = model.predict(X)
-
+#
+# roc_func = RocCurveDisplay.from_estimator
+# pr_func = PrecisionRecallDisplay.from_estimator
+#
+# fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2,
+#                                figsize=(9,9))
+#
+# tr_kws = {'estimator': model,
+#            'X': TrainX,
+#            'y': TrainY.values,
+#            'ax': ax1,
+#            'name': target
+#            }
+#
+# roc_func(**tr_kws)
+# ax1.grid(ls='--', color='lightgrey')
+# ax1.set_title("Training")
+#
+# test_kws = {'estimator': model,
+#        'X': TestX,
+#        'y': TestY.values,
+#        'ax': ax2,
+#        'name': target
+#        }
+#
+# roc_func(**test_kws)
+#
+# ax2.grid(ls='--', color='lightgrey')
+# ax2.set_title("Test")
+# ax2.set_ylabel('')
+#
+# tr_kws['ax'] = ax3
+# pr_func(**tr_kws)
+# ax3.grid(ls='--', color='lightgrey')
+#
+# test_kws['ax'] = ax4
+# pr_func(**test_kws)
+# ax4.set_ylabel('')
+# ax4.grid(ls='--', color='lightgrey')
+#
+# plt.show()
+#
+# # %%
+#
+# # confusion matrix
+#
+# X = np.concatenate([TrainX, TestX])
+# y = np.concatenate([TrainY, TestY])
+#
+# pred = model.predict(X)
+# 
 processor = ProcessPredictions('classification',
                                show=False,
                                save=False)
 
-im = processor.confusion_matrix(
-    y, pred,
-    cbar_params = {"border": False},
-    annotate_kws = {'fontsize': 20, "fmt": '%.f', 'ha':"center"})
-ax_ = im.axes
-
-ax_.set_title(target)
-plt.show()
+# im = processor.confusion_matrix(
+#     y, pred,
+#     cbar_params = {"border": False},
+#     annotate_kws = {'fontsize': 20, "fmt": '%.f', 'ha':"center"})
+# ax_ = im.axes
+#
+# ax_.set_title(target)
+# plt.show()
 
 # %%
 #

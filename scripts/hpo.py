@@ -62,7 +62,7 @@ def eval_on_test(_model):
     print(f"f1_score : {f1}  acc: {acc}")
     return
 
-#eval_on_test(model)
+eval_on_test(model)
 
 # %%
 
@@ -154,7 +154,7 @@ optimizer = HyperOpt(
     opt_path=f"results{SEP}{PREFIX}"
 )
 
-# results = optimizer.fit()
+results = optimizer.fit()
 
 # %%
 

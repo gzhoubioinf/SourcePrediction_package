@@ -63,7 +63,7 @@ def file_name_listdir_local(file_dir):
 # Define a function named 'get_datamatrix' with parameters 'row_list', 'files_select', 'datapath', and 'cutoff'
 def get_datamatrix(row_list,numb_files_select,datapath='./',cutoff=0.05):
     # Call file_name_listdir_local function to obtain a list of files from the specified directory
-    files_local = file_name_listdir_local(datapath)
+    files_local = file_name_listdir_local(datapath) #all files in the directory (file name starts with 'chunk' and the rest of the name is a numerical value)
 
     # Restrict the list of files to the first 'files_select' number of files
         
@@ -92,7 +92,7 @@ def get_datamatrix(row_list,numb_files_select,datapath='./',cutoff=0.05):
     for filename in files_local:
         # Open and read the file in binary mode
         with open(datapath + filename, 'rb') as f:
-            ob = f.readlines()
+            ob = f.readlines() #equal to number of lines in each file
             # Iterate through each line in the file
             for lines in ob:
                 n = 0
@@ -101,10 +101,10 @@ def get_datamatrix(row_list,numb_files_select,datapath='./',cutoff=0.05):
                 # Count the occurrences of words starting with 'assembly' and ending with a digit
                 for s in linestr:
                     if s.startswith('assembly'):
-                        n += int(s[-1])
+                        n += int(s[-1]) #???? is 'n' a counter or stores the end digit in it?
 
                 # Check if the ratio of the count to 857.0 is greater than the cutoff value
-                if n/857.0 > cutoff:
+                if n/857.0 > cutoff: #why 857?
                     num_preserved += 1  # Increment the count of preserved lines
                     indx_col = vocabulary_col.setdefault(linestr[0], len(vocabulary_col))  # Update the column vocabulary
 
@@ -124,7 +124,7 @@ def get_datamatrix(row_list,numb_files_select,datapath='./',cutoff=0.05):
     remove_percent = num_removed/(num_preserved + num_removed)
 
     # Create a Compressed Sparse Row matrix from the data, row, and col lists
-    mtr = csr_matrix((data, (row, col)))
+    mtr = csr_matrix((data, (row, col))) # mtr shape = (max(row)+1, max(col)+1)
 
     # Return the sparse matrix, column vocabulary, row vocabulary, and removal percentage as output
     return mtr, vocabulary_col, vocabulary_row, remove_percent
@@ -154,8 +154,9 @@ def get_datafilter(datalabel, filefold):
 
     # Filtering df to include only the rows where "data_type" is 0 or 1.
     # Storing the result in a new DataFrame called filtered1_df.
-    filtered1_df = df[df['data_type'].isin([0, 1])]
-    filtered1_df= filtered1_df.set_index('Name')
+    #filtered1_df = df[df['data_type'].isin([0, 1])]
+    #filtered1_df= filtered1_df.set_index('Name')
+    filtered1_df = df.set_index('Name')
 
     # Returning the filtered DataFrame.
     return filtered1_df
