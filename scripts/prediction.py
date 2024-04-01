@@ -65,6 +65,7 @@ model.reset_global_seed(313)
 
 model.fit(x=TrainX, y=TrainY.values)
 
+train_p = model.predict(TrainX)
 test_p = model.predict(TestX)
 
 # %%
@@ -78,6 +79,21 @@ processor = ProcessPredictions('classification',
                                save=False)
 
 # %%
+
+# Confusion matrix for Trainig samples
+
+im = processor.confusion_matrix(
+   TrainY, train_p,
+    cbar_params = {"border": False},
+    annotate_kws = {'fontsize': 20, "fmt": '%.f', 'ha':"center"})
+ax_ = im.axes
+
+ax_.set_title(target)
+plt.show()
+
+# %%
+
+# Confusion matrix for Test samples
 
 im = processor.confusion_matrix(
    TestY, test_p,

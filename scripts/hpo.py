@@ -154,7 +154,7 @@ optimizer = HyperOpt(
     opt_path=f"results{SEP}{PREFIX}"
 )
 
-results = optimizer.fit()
+#results = optimizer.fit()
 
 # %%
 
