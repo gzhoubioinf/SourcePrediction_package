@@ -48,38 +48,38 @@ X_array.shape
 
 y.shape
 
-# %%
-
-# plotting heatmap
-
-whole_data = np.concatenate((X_array, y.values.reshape(-1, 1)), axis=1)
-_ = associations(
-    whole_data,
-    nom_nom_assoc="cramer",
-    fmt=".1f",
-    figsize=(8, 8),
-    plot=False,
-    cbar=True
-)
-plt.tight_layout()
-plt.show()
-
-# %%
-
-# plotting input features distribution
-
-fig, axes = create_subplots(10, figsize=(14,10))
-
-for col, ax in zip(range(X.shape[1]), axes.flatten()):
-
-    hist(X_array[:, col], ax=ax, ax_kws=dict(title=f'input feature {col + 1}'),
-         show=False)
-
-plt.tight_layout()
-plt.show()
-
-# %%
-
-# target feature dstribution
-
-hist(y.values, ax_kws=dict(title='Target'))
+# # %%
+#
+# # plotting heatmap
+#
+# whole_data = np.concatenate((X_array, y.values.reshape(-1, 1)), axis=1)
+# _ = associations(
+#     whole_data,
+#     nom_nom_assoc="cramer",
+#     fmt=".1f",
+#     figsize=(8, 8),
+#     plot=False,
+#     cbar=True
+# )
+# plt.tight_layout()
+# plt.show()
+#
+# # %%
+#
+# # plotting input features distribution
+#
+# fig, axes = create_subplots(10, figsize=(14,10))
+#
+# for col, ax in zip(range(X.shape[1]), axes.flatten()):
+#
+#     hist(X_array[:, col], ax=ax, ax_kws=dict(title=f'input feature {col + 1}'),
+#          show=False)
+#
+# plt.tight_layout()
+# plt.show()
+#
+# # %%
+#
+# # target feature dstribution
+#
+# hist(y.values, ax_kws=dict(title='Target'))
