@@ -89,7 +89,7 @@ im = processor.confusion_matrix(
 ax_ = im.axes
 
 ax_.set_title(target)
-plt.show()
+plt.savefig('confusion_matrix_training', dpi=300)
 
 # %%
 
@@ -102,4 +102,4 @@ im = processor.confusion_matrix(
 ax_ = im.axes
 
 ax_.set_title(target)
-plt.show()
+plt.savefig('confusion_matrix_test', dpi=300)
