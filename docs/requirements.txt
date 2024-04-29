@@ -5,6 +5,7 @@ pandas
 scikit-optimize
 scikit-learn
 numpy
+xarray
 ipython
 notebook
 openpyxl
