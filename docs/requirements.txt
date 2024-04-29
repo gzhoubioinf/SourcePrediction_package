@@ -7,6 +7,7 @@ scikit-learn
 numpy
 xarray
 yellowbrick
+netcdf4
 ipython
 notebook
 openpyxl
