@@ -6,6 +6,7 @@ scikit-optimize
 scikit-learn
 numpy
 xarray
+yellowbrick
 ipython
 notebook
 openpyxl
