@@ -50,9 +50,9 @@ exp = MLClassificationExperiments(
     input_features=input_features,
     output_features=target)
 
-exp.fit(X, y.values, exclude=['AdaBoostClassifier',
-        'BaggingClassifier'])
-
-# %%
-
-exp.compare_errors('f1_score_macro', X, y.values)
+# exp.fit(X, y.values, exclude=['AdaBoostClassifier',
+#         'BaggingClassifier'])
+#
+# # %%
+# 
+# exp.compare_errors('f1_score_macro', X, y.values)
