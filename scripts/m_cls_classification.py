@@ -39,16 +39,7 @@ def f1_score_macro(t,p)->float:
 
 target = 'source_prediction'
 
-column_names = pd.read_csv('inputs_5.csv', header=None, skiprows=1).iloc[:, 0].tolist()
-
-ds = xr.open_dataset('data_5_test.nc')
-
-df = ds.data.to_pandas()
-df.columns = column_names + [target]
-
-
-X = df.drop(df.columns[-1], axis=1)
-y = df.iloc[:,-1:]
+X, y, input_features = get_data('data_5_test.nc', 'inputs_5.csv')
 
 TrainX, TestX, TrainY, TestY = TrainTestSplit(seed=313).split_by_random(X, y)
 
@@ -66,9 +57,10 @@ if USE_TRAINED_MODEL:
 else:
     model = Model(
         model=model_name,
-        input_features=column_names,
+        input_features=input_features,
         output_features=target,
         verbosity=0,
+        cross_validator={"KFold": {"n_splits": 10}},
                 )
 
     model.reset_global_seed(313)
