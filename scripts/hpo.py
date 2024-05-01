@@ -27,7 +27,7 @@ def f1_score_(t,p)->float:
 
 # %%
 
-X, y, inputs = get_data(return_bf_only=False)
+X, y, inputs = get_data('data_5_test.nc', 'inputs_5.csv')
 
 X = X.toarray()
 
