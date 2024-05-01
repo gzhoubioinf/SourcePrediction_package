@@ -104,6 +104,10 @@ print(f'Recall: {metrics.recall()}')
 
 print(f'F1 score: {f1_score_macro(TestY.values, test_p)}')
 
+# %%
+
+print(model.predict_proba(TestX))
+
 
 # %%
 
