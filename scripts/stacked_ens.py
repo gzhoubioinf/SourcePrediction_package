@@ -1,6 +1,6 @@
 """
 ==========================
-4. Stacked Ensambles
+5. Stacked Ensambles
 ==========================
 """
 
@@ -42,16 +42,7 @@ def f1_score_macro(t,p)->float:
 
 target = 'source_prediction'
 
-inputs = pd.read_csv('inputs_5.csv', header=None, skiprows=1).iloc[:, 0].tolist()
-
-ds = xr.open_dataset('data_5_test.nc')
-
-df = ds.data.to_pandas()
-df.columns = inputs + [target]
-
-
-X = df.drop(df.columns[-1], axis=1)
-y = df.iloc[:,-1:]
+X, y, input_features = get_data('data_5_test.nc', 'inputs_5.csv')
 
 # %%
 
@@ -82,7 +73,7 @@ meta_model_ = 'LogisticRegression'
 
 base_model_1 = Model(
     model=basemodel_1,
-    input_features=inputs,
+    input_features=input_features,
     output_features=target,
     verbosity=0,
 )
@@ -101,7 +92,7 @@ print(f'Base Model 1 -> F1 score: {f1_score_macro(ValY.values, bm_1_pred)}')
 
 base_model_2 = Model(
     model=basemodel_2,
-    input_features=inputs,
+    input_features=input_features,
     output_features=target,
     verbosity=0,
 )
@@ -120,7 +111,7 @@ print(f'Base Model 2 -> F1 score: {f1_score_macro(ValY.values, bm_2_pred)}')
 
 base_model_3 = Model(
     model=basemodel_3,
-    input_features=inputs,
+    input_features=input_features,
     output_features=target,
     verbosity=0,
 )
