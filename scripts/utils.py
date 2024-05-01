@@ -7,6 +7,8 @@ utils
 # importing necessary modules
 
 import numpy as np
+import pandas as pd
+import xarray as xr
 import json
 import pickle
 
@@ -15,41 +17,21 @@ import kmer_ml
 # %%
 
 # data preprocessing
-def get_data(return_bf_only:bool=True):
+def get_data(fname, feature_names_file):
 
-    best_feature_indices = [20178, 20177, 20176, 20175, 20174, 20173, 20172, 20171, 20170,
-       20169]
+    target = 'source_prediction'
 
-    with open('input.json', 'r') as f:
-    #with open(os.path.join(os.path.dirname(os.getcwd()), 'scripts', 'input.json'), 'r') as f:
-        data = json.load(f)
+    column_names = pd.read_csv(feature_names_file, header=None, skiprows=1).iloc[:, 0].tolist()
 
-    cutoff = data['cutoff']
-    numb_files_select = data['numb_files_select']
-    traits_scoary_path = data['traits_scoary_path']
-    class_label = data['class_label']
-    chunkdata_path = data['chunkdata_path']
+    ds = xr.open_dataset(fname)
 
-    filepath  = chunkdata_path
-    filtered_df = kmer_ml.get_datafilter(class_label,traits_scoary_path)
-    row_list = filtered_df.transpose().columns.values
+    df = ds.data.to_pandas()
+    df.columns = column_names + [target]
 
-    X, voc_col, voc_row, removed_percent =kmer_ml.get_datamatrix(row_list,
-                                                            numb_files_select=numb_files_select,
-                                                            datapath=filepath,
-                                                            cutoff=cutoff)
+    X = df.drop(df.columns[-1], axis=1)
+    y = df.iloc[:, -1:]
 
-    y = filtered_df['data_type']
-
-    if return_bf_only:
-        try:
-            return X[:, best_feature_indices], y
-        except IndexError:
-            raise IndexError(f"shape of input: {X.shape}, "
-                             f"number of selected files: {numb_files_select}, "
-                             f"{cutoff}, {chunkdata_path}, {removed_percent}")
-
-    return X, y, voc_col.keys()
+    return X, y, column_names
 
 
 def plot_confidence_interval(datalabel, report):
