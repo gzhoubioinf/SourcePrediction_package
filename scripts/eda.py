@@ -24,7 +24,7 @@ from utils import get_data
 
 # reading data
 
-X, y = get_data('data_5_test.nc', 'inputs_5.csv')
+X, y, inputs = get_data('data_5_test.nc', 'inputs_5.csv')
 
 feature_names = ['TTTTTTGCTAGCGGAAAACGGAGATTTAAAAGAAAACAAAATATTTTTTGCGTA',
                  'TTTTTTGCTAGCTGAACGTAAAACATTAAATTTCGCTCATTATTATATTATGCT',

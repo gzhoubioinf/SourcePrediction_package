@@ -29,8 +29,6 @@ def f1_score_(t,p)->float:
 
 X, y, inputs = get_data('data_5_test.nc', 'inputs_5.csv')
 
-X = X.toarray()
-
 TrainX, TestX, TrainY, TestY = TrainTestSplit(seed=313).split_by_random(X, y)
 
 print(TrainX.shape, TrainY.shape, TestX.shape, TestY.shape)
