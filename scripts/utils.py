@@ -15,6 +15,8 @@ import netCDF4 as nc
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+from SeqMetrics import ClassificationMetrics
+
 import kmer_ml
 
 # %%
@@ -57,7 +59,7 @@ def get_data(return_bf_only=False):
     return X, y, voc_col.keys()
 
 
-def save_data_to_nc(fname_nc, fname_csv):
+def save_data_to_nc(fname):
 
     X, y, inputs = get_data()
 
@@ -66,55 +68,44 @@ def save_data_to_nc(fname_nc, fname_csv):
     data = np.concatenate((X, y.to_numpy().reshape(-1,1)), axis=1)
 
     # Create a netCDF file
-    with nc.Dataset(fname_nc, 'w') as ds:
+    with nc.Dataset(fname, 'w') as ds:
         # Create dimensions
-        ds.createDimension('dim1', data.shape[0])
-        ds.createDimension('dim2', data.shape[1])
+        ds.createDimension('samples', data.shape[0])
+        ds.createDimension('inputs', data.shape[1] - 1)
 
         # Create a variable
-        var = ds.createVariable('data', 'uint8', ('dim1', 'dim2'))
+        X = ds.createVariable('X', 'uint8', ('samples', 'inputs'))
 
-        # Create a variable for the list of strings
-        str_var = ds.createVariable('inputs', 'S1', ('dim2',))
+        # Create a variable
+        target = ds.createVariable('target', 'uint8', ('samples',))
+
+        # Create a variable for input features
+        str_var = ds.createVariable('inputs', str, ('inputs',))
 
         # Store data in the variable
-        var[:] = data
-        str_var[:] = inputs
-
-    # # Convert dict_keys to a pandas DataFrame
-    # df = pd.DataFrame(inputs, columns=['inputs'])
-    #
-    # # Save the DataFrame to a CSV file
-    # df.to_csv(fname_csv, index=False)
+        X[:] = data[:, 0:-1]
+        target[:] = data[:, -1]
+        str_var[:] = np.array(list(inputs))
 
 
-def read_data(fname, feature_names_file):
-
-    target = 'source_prediction'
-
-    input_features = pd.read_csv(feature_names_file, header=None, skiprows=1).iloc[:, 0].tolist()
+def read_data(fname):
 
     ds = xr.open_dataset(fname)
+    X = ds.X.to_pandas()
+    y = ds.target.to_pandas()
 
-    df = ds.data.to_pandas()
-    df.columns = input_features + [target]
-
-    X = df.drop(df.columns[-1], axis=1)
-    y = df.iloc[:, -1:]
-
-    return X, y, input_features
+    return X, y, list(X.columns)
 
 
 def calculate_ci(fname):
 
-    df = pd.read_csv(fname, index_col=0)
+    df = pd.read_csv(fname)
     # Number of bootstrap samples
     num_bootstrap_samples = 100
 
     confidence_interval = []
 
     for index, row in df.iterrows():
-        print(index)
         # Bootstrap resampling
         bootstrap_importance_means = []
         for _ in range(num_bootstrap_samples):
@@ -131,6 +122,8 @@ def calculate_ci(fname):
 
     ex_file['CI_lower'] = ci['CI_lower']
     ex_file['CI_upper'] = ci['CI_upper']
+
+    ex_file.to_csv(fname, index=False, header=False)
 
     return
 
@@ -152,6 +145,23 @@ def plot_ci(fname):
     plt.show()
 
     return
+
+
+def feature_importances(model, input_features, fname):
+    # Get feature importance scores
+    feature_importance = model.feature_importances_
+
+    # Create a DataFrame with feature names and importance scores
+    feature_importance_df = pd.DataFrame({'Feature': input_features, 'Importance': feature_importance})
+
+    # Sort the DataFrame by importance scores in descending order
+    sorted_feature_importance_df = feature_importance_df.sort_values(by='Importance', ascending=False)
+
+    # Write the sorted DataFrame to a CSV file
+    sorted_feature_importance_df[0:50].to_csv(fname, index=False)
+
+    return
+
 
 
 # %%
