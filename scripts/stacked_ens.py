@@ -277,10 +277,10 @@ names = ['XGB', 'RF', 'LR', 'Stacked']
 
 f, ax = plt.subplots(facecolor="#EFE9E6")
 
-bar_chart(f1_score, cmap='summer_r',
+bar_chart(f1_score, color=['#BD76B2', '#3BAAE2', '#2BB67B', '#9FA537'],
           orient='v', labels=names, ax=ax,
           show=False)
-
+ax.set_ylim(0, 1)
 ax.grid(axis='y', ls='dotted', color='lightgrey')
 ax.set_title('F1_score')
 
@@ -288,16 +288,16 @@ for spine in ax.spines.values():
     spine.set_edgecolor('lightgrey')
     spine.set_linestyle('dashed')
 
-plt.show()
+plt.savefig("figures/ens_f1_score.png", dpi=600, bbox_inches="tight")
 #
 # %%
 
 f, ax = plt.subplots(facecolor="#EFE9E6")
 
-bar_chart(accuracy, cmap='summer_r',
+bar_chart(accuracy, color=['#BD76B2', '#3BAAE2', '#2BB67B', '#9FA537'],
           orient='v', labels=names, ax=ax,
           show=False)
-
+ax.set_ylim(0, 1)
 ax.grid(axis='y', ls='dotted', color='lightgrey')
 ax.set_title('Accuracy')
 
@@ -305,16 +305,16 @@ for spine in ax.spines.values():
     spine.set_edgecolor('lightgrey')
     spine.set_linestyle('dashed')
 
-plt.show()
+plt.savefig("figures/ens_accuracy.png", dpi=600, bbox_inches="tight")
 #
 # # %%
 #
 f, ax = plt.subplots(facecolor="#EFE9E6")
 
-bar_chart(precision, cmap='summer_r',
+bar_chart(precision, color=['#BD76B2', '#3BAAE2', '#2BB67B', '#9FA537'],
           orient='v', labels=names, ax=ax,
           show=False)
-
+ax.set_ylim(0, 1)
 ax.grid(axis='y', ls='dotted', color='lightgrey')
 ax.set_title('precision')
 
@@ -322,16 +322,16 @@ for spine in ax.spines.values():
     spine.set_edgecolor('lightgrey')
     spine.set_linestyle('dashed')
 
-plt.show()
+plt.savefig("figures/ens_precision.png", dpi=600, bbox_inches="tight")
 #
 # # %%
 #
 f, ax = plt.subplots(facecolor="#EFE9E6")
 
-bar_chart(recall, cmap='summer_r',
+bar_chart(recall, color=['#BD76B2', '#3BAAE2', '#2BB67B', '#9FA537'],
           orient='v', labels=names, ax=ax,
           show=False)
-
+ax.set_ylim(0, 1)
 ax.grid(axis='y', ls='dotted', color='lightgrey')
 ax.set_title('recall')
 
@@ -339,16 +339,16 @@ for spine in ax.spines.values():
     spine.set_edgecolor('lightgrey')
     spine.set_linestyle('dashed')
 
-plt.show()
+plt.savefig("figures/ens_recall.png", dpi=600, bbox_inches="tight")
 
 # %%
 
 f, ax = plt.subplots(facecolor="#EFE9E6")
 
-bar_chart(auc, cmap='summer_r',
+bar_chart(auc, color=['#BD76B2', '#3BAAE2', '#2BB67B', '#9FA537'],
           orient='v', labels=names, ax=ax,
           show=False)
-
+ax.set_ylim(0, 1)
 ax.grid(axis='y', ls='dotted', color='lightgrey')
 ax.set_title('AUC')
 
@@ -356,17 +356,17 @@ for spine in ax.spines.values():
     spine.set_edgecolor('lightgrey')
     spine.set_linestyle('dashed')
 
-plt.show()
+plt.savefig("figures/ens_auc.png", dpi=600, bbox_inches="tight")
 
 # %%
 
 names = ['XGB', 'RF', 'LR', 'Stacked']
 f, ax = plt.subplots(facecolor="#EFE9E6")
 
-bar_chart(roc_auc_score_list, cmap='summer_r',
+bar_chart(roc_auc_score_list,color=['#BD76B2', '#3BAAE2', '#2BB67B', '#9FA537'],
           orient='v', labels=names, ax=ax,
           show=False)
-
+ax.set_ylim(0, 1)
 ax.grid(axis='y', ls='dotted', color='lightgrey')
 ax.set_title('ROC AUC Score')
 
@@ -374,4 +374,4 @@ for spine in ax.spines.values():
     spine.set_edgecolor('lightgrey')
     spine.set_linestyle('dashed')
 
-plt.show()
+plt.savefig("figures/ens_roc_auc_score.png", dpi=600, bbox_inches="tight")
